@@ -3,7 +3,14 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/isaki/AndroidStudioProjects/Notes/app/src/main/res/drawable/border_right.xml" value="0.3075" />
+        <entry key="..\:/Users/isaki/AndroidStudioProjects/Notes/app/src/main/res/drawable/borderbottom.xml" value="0.3075" />
+        <entry key="..\:/Users/isaki/AndroidStudioProjects/Notes/app/src/main/res/layout-land/activity_main.xml" value="0.29635416666666664" />
         <entry key="..\:/Users/isaki/AndroidStudioProjects/Notes/app/src/main/res/layout/activity_main.xml" value="0.254981884057971" />
+        <entry key="..\:/Users/isaki/AndroidStudioProjects/Notes/app/src/main/res/layout/activity_note_details.xml" value="0.25769927536231885" />
+        <entry key="..\:/Users/isaki/AndroidStudioProjects/Notes/app/src/main/res/layout/fragment_notes_details.xml" value="0.25769927536231885" />
+        <entry key="..\:/Users/isaki/AndroidStudioProjects/Notes/app/src/main/res/layout/fragment_notes_list.xml" value="0.25769927536231885" />
+        <entry key="..\:/Users/isaki/AndroidStudioProjects/Notes/app/src/main/res/layout/item_note.xml" value="0.25769927536231885" />
       </map>
     </option>
   </component>
