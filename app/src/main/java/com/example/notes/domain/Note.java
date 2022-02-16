@@ -23,6 +23,7 @@ public class Note implements Parcelable {
         id = in.readString();
         title = in.readString();
         noteBody = in.readString();
+        date = new Date(in.readLong());
     }
 
     public static final Creator<Note> CREATOR = new Creator<Note>() {
@@ -63,5 +64,6 @@ public class Note implements Parcelable {
         parcel.writeString(id);
         parcel.writeString(title);
         parcel.writeString(noteBody);
+        parcel.writeLong(date.getTime());
     }
 }

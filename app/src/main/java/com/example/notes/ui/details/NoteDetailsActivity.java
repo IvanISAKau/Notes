@@ -31,7 +31,6 @@ public class NoteDetailsActivity extends AppCompatActivity {
 
             getSupportFragmentManager()
                     .beginTransaction()
-                    // тут у note.date значение null. Почему?
                     .replace(R.id.fragment_container_list, NotesDetailsFragment.newInstance(note))
                     .commit();
         }
