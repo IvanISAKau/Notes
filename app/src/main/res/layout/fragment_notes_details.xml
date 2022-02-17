@@ -18,19 +18,33 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="This is a note title" />
 
+
     <TextView
         android:id="@+id/date"
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin"
+        android:layout_marginBottom="@dimen/margin"
         android:textSize="@dimen/date_text_size"
         android:textStyle="italic"
         app:layout_constraintBottom_toTopOf="@id/scroll"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/date_edit_button"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/details_note_title"
-        android:layout_marginTop="@dimen/margin"
-        android:layout_marginBottom="@dimen/margin"
         tools:text="Wed Feb 13 16:27:12 UTC 2022 " />
+
+    <ImageButton
+        android:id="@+id/date_edit_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/margin"
+        android:src="@drawable/ic_baseline_edit"
+        app:layout_constraintBottom_toTopOf="@+id/scroll"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/date"
+        app:layout_constraintTop_toBottomOf="@+id/details_note_title" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/scroll"

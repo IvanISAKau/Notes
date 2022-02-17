@@ -24,11 +24,11 @@ public class NotesDetailsFragment extends Fragment {
     private TextView noteBody;
 
     public static NotesDetailsFragment newInstance(Note note) {
-        
+
         Bundle args = new Bundle();
 
         args.putParcelable(ARG_NOTE, note);
-        
+
         NotesDetailsFragment fragment = new NotesDetailsFragment();
         fragment.setArguments(args);
         return fragment;
@@ -45,17 +45,6 @@ public class NotesDetailsFragment extends Fragment {
         title = view.findViewById(R.id.details_note_title);
         date = view.findViewById(R.id.date);
         noteBody = view.findViewById(R.id.note_body);
-
-        getParentFragmentManager()
-                .setFragmentResultListener(NotesListFragment.NOTE_SELECTED, getViewLifecycleOwner(), new FragmentResultListener() {
-                    @Override
-                    public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-
-                        Note note = result.getParcelable(NotesListFragment.SELECTED_NOTE_BUNDLE);
-
-                        updateNote(note);
-                    }
-                });
 
         Bundle arguments = getArguments();
 

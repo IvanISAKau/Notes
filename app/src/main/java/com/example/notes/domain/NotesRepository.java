@@ -1,5 +1,6 @@
 package com.example.notes.domain;
 
+import java.util.Date;
 import java.util.List;
 
 public interface NotesRepository {
@@ -14,5 +15,5 @@ public interface NotesRepository {
 
     void changeNoteBody();
 
-    void changeDate();
+    void changeDate(Note note, Date newDate);
 }

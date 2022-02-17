@@ -1,6 +1,7 @@
 package com.example.notes.domain;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -47,7 +48,8 @@ public class NotesRepositoryImpl implements NotesRepository {
     }
 
     @Override
-    public void changeDate() {
+    public void changeDate(Note note, Date newDate) {
         // todo
+        note.setDate(newDate);
     }
 }
