@@ -19,4 +19,5 @@ public class NotesListPresenter {
         List<Note> notes = repository.getNotes();
         view.showNotes(notes);
     }
+
 }

@@ -70,4 +70,5 @@ public class Note implements Parcelable {
     public void setDate(Date date) {
         this.date = date;
     }
+
 }
