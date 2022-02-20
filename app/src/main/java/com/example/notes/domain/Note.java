@@ -66,4 +66,9 @@ public class Note implements Parcelable {
         parcel.writeString(noteBody);
         parcel.writeLong(date.getTime());
     }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
 }
