@@ -22,14 +22,12 @@ public class NotesRepositoryImpl implements NotesRepository {
             notes.add(new Note(UUID.randomUUID().toString(), "Починить тостер", "Купить новый ядерный реактор на барахолке и заменить"));
             notes.add(new Note(UUID.randomUUID().toString(), "Купить билеты в кино", "8 билетов на вечерний сеанс в 3-м ряду"));
             notes.add(new Note(UUID.randomUUID().toString(), "Выкинуть мусор", "Отсортировать пластик, бумагу и стекло отдельно от бытовых отходов"));
-
         }
         return instance;
     }
 
     @Override
     public List<Note> getNotes() {
-
         return notes;
     }
 

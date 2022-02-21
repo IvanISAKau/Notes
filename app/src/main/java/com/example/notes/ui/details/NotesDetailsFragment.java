@@ -1,16 +1,24 @@
 package com.example.notes.ui.details;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 
 import com.example.notes.R;
 import com.example.notes.domain.Note;
 import com.example.notes.domain.NotesRepositoryImpl;
+import com.example.notes.ui.MainActivity;
+import com.example.notes.ui.NavDrawable;
+import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.timepicker.MaterialTimePicker;
@@ -45,9 +53,43 @@ public class NotesDetailsFragment extends Fragment {
         super(R.layout.fragment_notes_details);
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        return super.onCreateView(inflater, container, savedInstanceState);
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        MaterialToolbar toolbar = view.findViewById(R.id.toolbar_details);
+
+        if (requireActivity() instanceof NavDrawable) {
+            ((NavDrawable) requireActivity()).initDrawer(toolbar);
+        }
+
+        toolbar.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+
+                int id = item.getItemId();
+
+                switch (id) {
+                    case R.id.action_share:
+                        Toast.makeText(requireContext(), "Note has been shared", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.action_add_an_image:
+                        Toast.makeText(requireContext(), "Image has been added", Toast.LENGTH_SHORT).show();
+                        return true;
+                    case R.id.action_delete:
+                        Toast.makeText(requireContext(), "Note has been deleted", Toast.LENGTH_SHORT).show();
+                        return true;
+                }
+
+                return false;
+            }
+        });
 
         title = view.findViewById(R.id.details_note_title);
         date = view.findViewById(R.id.date);
@@ -64,7 +106,7 @@ public class NotesDetailsFragment extends Fragment {
         });
 
     }
-    
+
     private Note getCurrentNote() {
 
         Note note = null;
@@ -89,7 +131,7 @@ public class NotesDetailsFragment extends Fragment {
             @Override
             public void onPositiveButtonClick(Object selection) {
 
-                MaterialTimePicker timePicker =  new MaterialTimePicker.Builder()
+                MaterialTimePicker timePicker = new MaterialTimePicker.Builder()
                         .setTimeFormat(TimeFormat.CLOCK_24H)
                         .setHour(23)
                         .setMinute(60)
