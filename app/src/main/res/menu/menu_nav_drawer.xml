@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_notes_list"
+        android:title="@string/notes_list" />
+
+    <group android:id="@+id/group">
+
+        <item
+            android:id="@+id/action_settings"
+            android:title="@string/settings" />
+
+        <item
+            android:id="@+id/action_about"
+            android:title="@string/about" />
+
+    </group>
+
+    <item
+        android:id="@+id/action_exit"
+        android:title="@string/exit" />
+
+</menu>
