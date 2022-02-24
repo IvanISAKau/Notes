@@ -22,37 +22,14 @@ import com.google.android.material.navigation.NavigationView;
 
 public class MainActivity extends AppCompatActivity implements NavDrawable {
 
+    private DrawerLayout drawerLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        getSupportFragmentManager().setFragmentResultListener(NotesListFragment.NOTE_SELECTED, this, new FragmentResultListener() {
-            @Override
-            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
-
-                Note note = result.getParcelable(NotesListFragment.SELECTED_NOTE_BUNDLE);
-
-                getSupportFragmentManager()
-                        .beginTransaction()
-                        .replace(R.id.fragment_container, NotesDetailsFragment.newInstance(note))
-                        .addToBackStack("NoteDetailsFragment")
-                        .commit();
-            }
-        });
-
-    }
-
-    @Override
-    public void initDrawer(MaterialToolbar toolbar) {
-        // Находим DrawerLayout
-        DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);
-        // Создаем ActionBarDrawerToggle
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
-                R.string.navigation_drawer_open,
-                R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(toggle);
-        toggle.syncState();
+        drawerLayout = findViewById(R.id.drawer_layout);
 
         // Обработка навигационного меню
         NavigationView navigationView = findViewById(R.id.navigation);
@@ -103,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
 
                         getSupportFragmentManager()
                                 .beginTransaction()
-//                                .addToBackStack("NoteListFragment")
                                 .replace(R.id.fragment_container, notesListFragment, NotesListFragment.LIST_TAG)
                                 .commit();
                         drawerLayout.closeDrawer(GravityCompat.START);
@@ -118,6 +94,31 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
                 return false;
             }
         });
+
+        getSupportFragmentManager().setFragmentResultListener(NotesListFragment.NOTE_SELECTED, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+
+                Note note = result.getParcelable(NotesListFragment.SELECTED_NOTE_BUNDLE);
+
+                getSupportFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.fragment_container, NotesDetailsFragment.newInstance(note))
+                        .addToBackStack("NoteDetailsFragment")
+                        .commit();
+            }
+        });
+
+    }
+
+    @Override
+    public void initDrawer(MaterialToolbar toolbar) {
+
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar,
+                R.string.navigation_drawer_open,
+                R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        toggle.syncState();
     }
 
 }
