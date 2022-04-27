@@ -37,8 +37,8 @@ public class NotesRepositoryImpl implements NotesRepository {
     }
 
     @Override
-    public void deleteNote() {
-        // todo
+    public void deleteNote(Note note) {
+        notes.remove(note);
     }
 
     @Override

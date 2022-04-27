@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.example.notes.MyDialogExitFragment;
 import com.example.notes.R;
 import com.example.notes.domain.Note;
 import com.example.notes.ui.about.AboutFragment;
@@ -61,7 +62,7 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
                         return true;
 
                     case R.id.action_exit:
-                        finish();
+                        MyDialogExitFragment.newInstance().show(getSupportFragmentManager(), "MyDialogExitFragment");
                         return true;
 
                     case R.id.action_notes_list:

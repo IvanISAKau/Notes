@@ -17,6 +17,7 @@ import com.example.notes.R;
 import com.example.notes.domain.Note;
 import com.example.notes.domain.NotesRepositoryImpl;
 import com.example.notes.ui.MainActivity;
+import com.example.notes.ui.MyBottomSheetDeleteDialogFragment;
 import com.example.notes.ui.NavDrawable;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.datepicker.MaterialDatePicker;
@@ -83,10 +84,9 @@ public class NotesDetailsFragment extends Fragment {
                         Toast.makeText(requireContext(), "Image has been added", Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.action_delete:
-                        Toast.makeText(requireContext(), "Note has been deleted", Toast.LENGTH_SHORT).show();
+                        MyBottomSheetDeleteDialogFragment.newInstance(getCurrentNote()).show(getParentFragmentManager(), "MyBottomSheetDeleteDialogFragment");
                         return true;
                 }
-
                 return false;
             }
         });

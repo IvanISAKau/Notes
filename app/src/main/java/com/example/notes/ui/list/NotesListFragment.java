@@ -112,6 +112,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
                             if (menuItem.getItemId() == R.id.action_delete_note) {
                                 // todo
+                                NotesRepositoryImpl.getInstance().deleteNote(note);
                                 Toast.makeText(requireContext(), "Note has been deleted", Toast.LENGTH_SHORT).show();
                             }
 
