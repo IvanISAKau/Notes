@@ -5,4 +5,8 @@
     <dimen name="date_text_size">16sp</dimen>
     <dimen name="note_body_text_size">20sp</dimen>
     <dimen name="drawer_header_padding">24dp</dimen>
+    <dimen name="bottom_sheet_padding">16dp</dimen>
+    <dimen name="bottom_sheet_text_size">28sp</dimen>
+    <dimen name="bottom_sheet_icon_size">86dp</dimen>
+    <dimen name="exit_dialog_fragment_margin">24dp</dimen>
 </resources>

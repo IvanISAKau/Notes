@@ -9,7 +9,7 @@ public interface NotesRepository {
 
     void addNote();
 
-    void deleteNote();
+    void deleteNote(Note note);
 
     void changeTitle();
 
