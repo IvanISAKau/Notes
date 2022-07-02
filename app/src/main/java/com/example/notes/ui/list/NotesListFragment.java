@@ -21,7 +21,9 @@ import com.example.notes.domain.NotesRepositoryImpl;
 import com.example.notes.ui.NavDrawable;
 import com.google.android.material.appbar.MaterialToolbar;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class NotesListFragment extends Fragment implements NotesListView {
 
@@ -32,6 +34,8 @@ public class NotesListFragment extends Fragment implements NotesListView {
     private LinearLayout container;
 
     private NotesListPresenter presenter;
+
+    //private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -128,6 +132,12 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
             TextView noteTitle = itemView.findViewById(R.id.note_title);
             noteTitle.setText(note.getTitle());
+
+            TextView noteContent = itemView.findViewById(R.id.content);
+            noteContent.setText(note.getNoteBody());
+
+            TextView date = itemView.findViewById(R.id.date);
+            date.setText(new SimpleDateFormat("dd.MM.yyyy HH:mm").format(note.getDate()));
 
             container.addView(itemView);
         }

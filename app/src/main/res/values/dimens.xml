@@ -9,4 +9,7 @@
     <dimen name="bottom_sheet_text_size">28sp</dimen>
     <dimen name="bottom_sheet_icon_size">86dp</dimen>
     <dimen name="exit_dialog_fragment_margin">24dp</dimen>
+    <dimen name="content_text_size">12sp</dimen>
+    <dimen name="card_margin">16dp</dimen>
+    <dimen name="card_corner_radius">18dp</dimen>
 </resources>
