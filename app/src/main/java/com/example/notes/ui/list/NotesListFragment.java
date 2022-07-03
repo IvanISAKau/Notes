@@ -35,7 +35,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
 
     private NotesListPresenter presenter;
 
-    //private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
+    private SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault());
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,9 +88,10 @@ public class NotesListFragment extends Fragment implements NotesListView {
     public void showNotes(List<Note> notes) {
 
         for (Note note : notes) {
+
             View itemView = getLayoutInflater().inflate(R.layout.item_note, container, false);
 
-            itemView.setOnClickListener(new View.OnClickListener() {
+            itemView.findViewById(R.id.item_card).setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -103,7 +104,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
                 }
             });
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            itemView.findViewById(R.id.item_card).setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
 
@@ -137,7 +138,7 @@ public class NotesListFragment extends Fragment implements NotesListView {
             noteContent.setText(note.getNoteBody());
 
             TextView date = itemView.findViewById(R.id.date);
-            date.setText(new SimpleDateFormat("dd.MM.yyyy HH:mm").format(note.getDate()));
+            date.setText(format.format(note.getDate()));
 
             container.addView(itemView);
         }
