@@ -42,7 +42,7 @@
 
             <TextView
                 android:id="@+id/content"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="@dimen/card_margin"
                 android:layout_marginBottom="@dimen/card_margin"
@@ -50,7 +50,10 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/note_title"
-                tools:text="This is a content" />
+                android:maxLength="150"
+                android:maxLines="6"
+                android:ellipsize="end"
+                tools:text="This is a content"/>
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="note_title_text_size">24sp</dimen>
-    <dimen name="margin">8dp</dimen>
+    <dimen name="margin">6dp</dimen>
     <dimen name="date_text_size">16sp</dimen>
     <dimen name="note_body_text_size">20sp</dimen>
     <dimen name="drawer_header_padding">24dp</dimen>
@@ -11,5 +11,6 @@
     <dimen name="exit_dialog_fragment_margin">24dp</dimen>
     <dimen name="content_text_size">12sp</dimen>
     <dimen name="card_margin">16dp</dimen>
-    <dimen name="card_corner_radius">18dp</dimen>
+    <dimen name="card_corner_radius">16dp</dimen>
+    <dimen name="margin_notes_details">12dp</dimen>
 </resources>

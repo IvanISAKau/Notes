@@ -21,7 +21,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/margin"
+        android:layout_margin="@dimen/margin_notes_details"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <TextView
