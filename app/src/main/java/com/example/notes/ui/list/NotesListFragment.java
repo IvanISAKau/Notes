@@ -14,30 +14,43 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.notes.R;
 import com.example.notes.domain.Note;
+import com.example.notes.domain.NotesRepository;
 import com.example.notes.domain.NotesRepositoryImpl;
 import com.example.notes.ui.NavDrawable;
 import com.google.android.material.appbar.MaterialToolbar;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
-public class NotesListFragment extends Fragment implements NotesListView {
+public class NotesListFragment extends Fragment {
 
     public static final String NOTE_SELECTED = "NOTE_SELECTED";
     public static final String SELECTED_NOTE_BUNDLE = "SELECTED_NOTE_BUNDLE";
     public static final String LIST_TAG = "LIST_TAG";
 
-    private LinearLayout container;
+    //private LinearLayout container;
 
-    private NotesListPresenter presenter;
+    private RecyclerView list;
+
+    private NotesRepositoryImpl repository;
+
+    //private NotesListPresenter presenter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        presenter = new NotesListPresenter(this, NotesRepositoryImpl.getInstance());
+        repository = NotesRepositoryImpl.getInstance();
+
+        //presenter = new NotesListPresenter(this, NotesRepositoryImpl.getInstance());
     }
 
     @Nullable
@@ -75,62 +88,34 @@ public class NotesListFragment extends Fragment implements NotesListView {
             }
         });
 
-        container = view.findViewById(R.id.container);
+        list = view.findViewById(R.id.list_container);
+        //list.setLayoutManager(new LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false));
+        //list.setLayoutManager(new GridLayoutManager(requireContext(), 2));
+        list.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
 
-        presenter.requestNotes();
+        NotesListAdapter adapter = new NotesListAdapter();
+
+        list.setAdapter(adapter);
+
+        adapter.setOnNoteClicked(new NotesListAdapter.OnNoteClicked() {
+            @Override
+            public void onNoteClicked(Note note) {
+
+                Bundle bundle = new Bundle();
+                bundle.putParcelable(SELECTED_NOTE_BUNDLE, note);
+
+                getParentFragmentManager()
+                        .setFragmentResult(NOTE_SELECTED, bundle);
+            }
+        });
+
+        adapter.setData(repository.getNotes());
+
+        adapter.notifyDataSetChanged();
+
+        //container = view.findViewById(R.id.container);
+
+        //presenter.requestNotes();
     }
 
-    @Override
-    public void showNotes(List<Note> notes) {
-
-        for (Note note : notes) {
-            View itemView = getLayoutInflater().inflate(R.layout.item_note, container, false);
-
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    Bundle bundle = new Bundle();
-                    bundle.putParcelable(SELECTED_NOTE_BUNDLE, note);
-
-                    getParentFragmentManager()
-                            .setFragmentResult(NOTE_SELECTED, bundle);
-
-                }
-            });
-
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
-
-                    PopupMenu popupMenu = new PopupMenu(requireContext(), view);
-                    requireActivity().getMenuInflater().inflate(R.menu.menu_pop_list, popupMenu.getMenu());
-
-                    popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem menuItem) {
-
-                            if (menuItem.getItemId() == R.id.action_delete_note) {
-                                // todo
-                                NotesRepositoryImpl.getInstance().deleteNote(note);
-                                Toast.makeText(requireContext(), "Note has been deleted", Toast.LENGTH_SHORT).show();
-                            }
-
-                            return false;
-                        }
-                    });
-
-                    popupMenu.show();
-
-                    return false;
-                }
-            });
-
-            TextView noteTitle = itemView.findViewById(R.id.note_title);
-            noteTitle.setText(note.getTitle());
-
-            container.addView(itemView);
-        }
-
-    }
 }
