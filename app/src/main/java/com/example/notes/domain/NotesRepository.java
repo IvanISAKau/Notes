@@ -7,7 +7,7 @@ public interface NotesRepository {
 
     List<Note> getNotes();
 
-    void addNote();
+    Note addNote(String title, String content);
 
     void deleteNote(Note note);
 

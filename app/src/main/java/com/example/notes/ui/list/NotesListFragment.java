@@ -1,34 +1,26 @@
 package com.example.notes.ui.list;
 
 import android.os.Bundle;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.PopupMenu;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.notes.R;
 import com.example.notes.domain.Note;
-import com.example.notes.domain.NotesRepository;
 import com.example.notes.domain.NotesRepositoryImpl;
 import com.example.notes.ui.NavDrawable;
 import com.google.android.material.appbar.MaterialToolbar;
-
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
 
 public class NotesListFragment extends Fragment {
 
@@ -41,6 +33,11 @@ public class NotesListFragment extends Fragment {
     private RecyclerView list;
 
     private NotesRepositoryImpl repository;
+
+    private NotesListAdapter adapter;
+
+    private Note selectedNote;
+    private int selectedNoteIndex;
 
     //private NotesListPresenter presenter;
 
@@ -93,7 +90,7 @@ public class NotesListFragment extends Fragment {
         //list.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         list.setLayoutManager(new StaggeredGridLayoutManager(2, LinearLayoutManager.VERTICAL));
 
-        NotesListAdapter adapter = new NotesListAdapter();
+        adapter = new NotesListAdapter(this);
 
         list.setAdapter(adapter);
 
@@ -107,15 +104,59 @@ public class NotesListFragment extends Fragment {
                 getParentFragmentManager()
                         .setFragmentResult(NOTE_SELECTED, bundle);
             }
+
+            @Override
+            public void onNoteLongClicked(Note note, int position) {
+                selectedNote = note;
+                selectedNoteIndex = position;
+            }
         });
 
         adapter.setData(repository.getNotes());
 
         adapter.notifyDataSetChanged();
 
+        view.findViewById(R.id.add_floating_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                Note note = repository.addNote("Добавленная заметка", "Контент добавленной заметки по add_floating_button");
+
+                int index = adapter.addItem(note);
+                adapter.notifyItemInserted(index);
+
+                list.smoothScrollToPosition(index);
+            }
+        });
+
         //container = view.findViewById(R.id.container);
 
         //presenter.requestNotes();
     }
 
+    @Override
+    public void onCreateContextMenu(@NonNull ContextMenu menu, @NonNull View v, @Nullable ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        requireActivity().getMenuInflater().inflate(R.menu.menu_list_context, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_edit_note:
+                Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show();
+                return true;
+            case R.id.action_delete_note:
+
+                repository.deleteNote(selectedNote);
+
+                adapter.removeItem(selectedNoteIndex);
+
+                adapter.notifyItemRemoved(selectedNoteIndex);
+
+                return true;
+        }
+        return super.onContextItemSelected(item);
+    }
 }
