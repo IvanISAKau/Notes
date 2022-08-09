@@ -15,5 +15,7 @@ public interface NotesRepository {
 
     void changeNoteBody();
 
+    Note updateNote(String id, String newTitle, String newContent);
+
     void changeDate(Note note, Date newDate);
 }

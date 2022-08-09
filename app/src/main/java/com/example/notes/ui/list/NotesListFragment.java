@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentResultListener;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
@@ -19,6 +20,7 @@ import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 import com.example.notes.R;
 import com.example.notes.domain.Note;
 import com.example.notes.domain.NotesRepositoryImpl;
+import com.example.notes.ui.EditNoteBottomSheetDialogFragment;
 import com.example.notes.ui.NavDrawable;
 import com.google.android.material.appbar.MaterialToolbar;
 
@@ -129,6 +131,17 @@ public class NotesListFragment extends Fragment {
             }
         });
 
+        getParentFragmentManager().setFragmentResultListener(EditNoteBottomSheetDialogFragment.REQUEST_KEY, getViewLifecycleOwner(), new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                Note note = result.getParcelable(EditNoteBottomSheetDialogFragment.ARG_EDIT_NOTE);
+
+                adapter.updateItem(note, selectedNoteIndex);
+
+                adapter.notifyItemChanged(selectedNoteIndex);
+            }
+        });
+
         //container = view.findViewById(R.id.container);
 
         //presenter.requestNotes();
@@ -145,7 +158,9 @@ public class NotesListFragment extends Fragment {
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_edit_note:
-                Toast.makeText(requireContext(), "Edit", Toast.LENGTH_SHORT).show();
+
+                EditNoteBottomSheetDialogFragment.newInstance(selectedNote)
+                        .show(getParentFragmentManager(), "EditNoteBottomSheetDialogFragment");
                 return true;
             case R.id.action_delete_note:
 

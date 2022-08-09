@@ -68,6 +68,28 @@ public class NotesRepositoryImpl implements NotesRepository {
     }
 
     @Override
+    public Note updateNote(String id, String newTitle, String newContent) {
+
+        Note toChange = null;
+        int indexToChange = -1;
+
+        for (int i = 0; i < notes.size(); i++) {
+            if (notes.get(i).getId().equals(id)) {
+                toChange = notes.get(i);
+                indexToChange = i;
+                break;
+            }
+        }
+
+        Note newNote = new Note(toChange.getId(), newTitle, newContent);
+
+        notes.set(indexToChange, newNote);
+
+        return newNote;
+
+    }
+
+    @Override
     public void changeDate(Note note, Date newDate) {
         note.setDate(newDate);
     }

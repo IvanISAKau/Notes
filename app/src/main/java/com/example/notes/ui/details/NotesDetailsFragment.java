@@ -84,7 +84,8 @@ public class NotesDetailsFragment extends Fragment {
                         Toast.makeText(requireContext(), "Image has been added", Toast.LENGTH_SHORT).show();
                         return true;
                     case R.id.action_delete:
-                        MyBottomSheetDeleteDialogFragment.newInstance(getCurrentNote()).show(getParentFragmentManager(), "MyBottomSheetDeleteDialogFragment");
+                        MyBottomSheetDeleteDialogFragment.newInstance(getCurrentNote())
+                                .show(getParentFragmentManager(), "MyBottomSheetDeleteDialogFragment");
                         return true;
                 }
                 return false;

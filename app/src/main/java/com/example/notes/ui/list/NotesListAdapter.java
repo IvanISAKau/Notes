@@ -32,6 +32,7 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
         this.onNoteClicked = onNoteClicked;
     }
 
+
     interface OnNoteClicked {
         void onNoteClicked(Note note);
         void onNoteLongClicked(Note note, int position);
@@ -53,6 +54,10 @@ public class NotesListAdapter extends RecyclerView.Adapter<NotesListAdapter.Note
 
     public void removeItem(int selectedNoteIndex) {
         data.remove(selectedNoteIndex);
+    }
+
+    public void updateItem(Note note, int selectedNoteIndex) {
+        data.set(selectedNoteIndex, note);
     }
 
 
