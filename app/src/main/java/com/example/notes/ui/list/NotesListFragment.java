@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,13 +19,16 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.notes.R;
+import com.example.notes.domain.Callback;
 import com.example.notes.domain.Note;
 import com.example.notes.domain.NotesRepositoryImpl;
 import com.example.notes.ui.EditNoteBottomSheetDialogFragment;
 import com.example.notes.ui.NavDrawable;
 import com.google.android.material.appbar.MaterialToolbar;
 
-public class NotesListFragment extends Fragment {
+import java.util.List;
+
+public class NotesListFragment extends Fragment implements ListView{
 
     public static final String NOTE_SELECTED = "NOTE_SELECTED";
     public static final String SELECTED_NOTE_BUNDLE = "SELECTED_NOTE_BUNDLE";
@@ -34,12 +38,15 @@ public class NotesListFragment extends Fragment {
 
     private RecyclerView list;
 
-    private NotesRepositoryImpl repository;
+//    private NotesRepositoryImpl repository;
+    private NotesListPresenter presenter;
 
     private NotesListAdapter adapter;
 
-    private Note selectedNote;
-    private int selectedNoteIndex;
+//    private Note selectedNote;
+//    private int selectedNoteIndex;
+
+    private ProgressBar progressBar;
 
     //private NotesListPresenter presenter;
 
@@ -47,9 +54,8 @@ public class NotesListFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        repository = NotesRepositoryImpl.getInstance();
+        //repository = NotesRepositoryImpl.getInstance();
 
-        //presenter = new NotesListPresenter(this, NotesRepositoryImpl.getInstance());
     }
 
     @Nullable
@@ -62,7 +68,11 @@ public class NotesListFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        presenter = new NotesListPresenter(NotesRepositoryImpl.getInstance(), this);
+
         MaterialToolbar toolbar = view.findViewById(R.id.toolbar);
+
+        progressBar = view.findViewById(R.id.progress);
 
         if (requireActivity() instanceof NavDrawable) {
             ((NavDrawable) requireActivity()).initDrawer(toolbar);
@@ -109,25 +119,39 @@ public class NotesListFragment extends Fragment {
 
             @Override
             public void onNoteLongClicked(Note note, int position) {
-                selectedNote = note;
-                selectedNoteIndex = position;
+                presenter.setSelectedNote(note);
+                presenter.setSelectedNoteIndex(position);
+
+//                selectedNote = note;
+//                selectedNoteIndex = position;
             }
         });
 
-        adapter.setData(repository.getNotes());
-
-        adapter.notifyDataSetChanged();
+////        adapter.setData(repository.getNotes()); // это все синхронно!
+////
+////        adapter.notifyDataSetChanged();
+//
+//        // а так асинхронно:
+//        repository.getNotes(new Callback<List<Note>>() {
+//            @Override
+//            public void onSuccess(List<Note> data) {
+////                adapter.setData(data);
+////                adapter.notifyDataSetChanged();
+//            }
+//        });
 
         view.findViewById(R.id.add_floating_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                Note note = repository.addNote("Добавленная заметка", "Контент добавленной заметки по add_floating_button");
+//                Note note = repository.addNote("Добавленная заметка", "Контент добавленной заметки по add_floating_button");
 
-                int index = adapter.addItem(note);
-                adapter.notifyItemInserted(index);
+                presenter.addItem();
 
-                list.smoothScrollToPosition(index);
+//                int index = adapter.addItem(note);
+//                adapter.notifyItemInserted(index);
+//
+//                list.smoothScrollToPosition(index);
             }
         });
 
@@ -136,11 +160,13 @@ public class NotesListFragment extends Fragment {
             public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
                 Note note = result.getParcelable(EditNoteBottomSheetDialogFragment.ARG_EDIT_NOTE);
 
-                adapter.updateItem(note, selectedNoteIndex);
+                adapter.updateItem(note, presenter.getSelectedNoteIndex());
 
-                adapter.notifyItemChanged(selectedNoteIndex);
+                adapter.notifyItemChanged(presenter.getSelectedNoteIndex());
             }
         });
+
+        presenter.requestNotes();
 
         //container = view.findViewById(R.id.container);
 
@@ -159,19 +185,58 @@ public class NotesListFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_edit_note:
 
-                EditNoteBottomSheetDialogFragment.newInstance(selectedNote)
+                EditNoteBottomSheetDialogFragment.newInstance(presenter.getSelectedNote())
                         .show(getParentFragmentManager(), "EditNoteBottomSheetDialogFragment");
                 return true;
             case R.id.action_delete_note:
 
-                repository.deleteNote(selectedNote);
+                presenter.deleteItem();
 
-                adapter.removeItem(selectedNoteIndex);
-
-                adapter.notifyItemRemoved(selectedNoteIndex);
+//                repository.deleteNote(selectedNote);
+//
+//                adapter.removeItem(selectedNoteIndex);
+//
+//                adapter.notifyItemRemoved(selectedNoteIndex);
 
                 return true;
         }
         return super.onContextItemSelected(item);
+    }
+
+    @Override
+    public void showNotes(List<Note> notes) {
+
+        adapter.setData(notes);
+        adapter.notifyDataSetChanged();
+
+    }
+
+    @Override
+    public void addNote(Note note) {
+
+        int index = adapter.addItem(note);
+        adapter.notifyItemInserted(index);
+
+        list.smoothScrollToPosition(index);
+
+    }
+
+    @Override
+    public void removeNote(Note note, int index) {
+
+        adapter.removeItem(index);
+
+        adapter.notifyItemRemoved(presenter.getSelectedNoteIndex());
+
+    }
+
+    @Override
+    public void showProgress() {
+        progressBar.setVisibility(View.VISIBLE);
+    }
+
+    @Override
+    public void hideProgress() {
+        progressBar.setVisibility(View.GONE);
     }
 }

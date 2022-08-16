@@ -1,15 +1,26 @@
 package com.example.notes.domain;
 
+import android.os.Handler;
+import android.os.Looper;
+
+import com.example.notes.ui.list.NotesListFragment;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class NotesRepositoryImpl implements NotesRepository {
 
     private static ArrayList<Note> notes;
 
     private static NotesRepositoryImpl instance;
+
+    private Executor executor = Executors.newSingleThreadExecutor();
+
+    private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
     private NotesRepositoryImpl() {
     }
@@ -40,22 +51,111 @@ public class NotesRepositoryImpl implements NotesRepository {
         return instance;
     }
 
+//    @Override
+//    public List<Note> getNotes() {
+//        return notes;
+//    }
+
+    // асинхронно:
+
+    //    @Override
+//    public void getNotes(Callback<List<Note>> callback) {
+//                callback.onSuccess(notes);
+//    }
+
     @Override
-    public List<Note> getNotes() {
-        return notes;
+    public void getNotes(Callback<List<Note>> callback) {
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+//                callback.onSuccess(notes);
+
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onSuccess(notes);
+                    }
+                });
+
+            }
+        });
+
     }
 
     @Override
-    public Note addNote(String title, String content) {
-        Note note = new Note(UUID.randomUUID().toString(), title, content);
-        notes.add(note);
-        return note;
+    public void addNote(String title, String content, Callback<Note> callback) {
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Note note = new Note(UUID.randomUUID().toString(), title, content);
+                notes.add(note);
+
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onSuccess(note);
+                    }
+                });
+
+            }
+        });
+
     }
 
     @Override
-    public void deleteNote(Note note) {
-        notes.remove(note);
+    public void deleteNote(Note note, Callback<Void> callback) {
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                notes.remove(note);
+
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onSuccess(null);
+                    }
+                });
+
+            }
+        });
+
     }
+
+//    @Override
+//    public Note addNote(String title, String content) {
+//        Note note = new Note(UUID.randomUUID().toString(), title, content);
+//        notes.add(note);
+//        return note;
+//    }
+//
+//    @Override
+//    public void deleteNote(Note note) {
+//        notes.remove(note);
+//    }
 
     @Override
     public void changeTitle() {

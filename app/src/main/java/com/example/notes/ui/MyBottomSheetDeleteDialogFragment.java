@@ -48,7 +48,7 @@ public class MyBottomSheetDeleteDialogFragment extends BottomSheetDialogFragment
         view.findViewById(R.id.delete_btn_bottom_sheet).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                NotesRepositoryImpl.getInstance().deleteNote(getArguments().getParcelable(ARG_NOTE));
+                //NotesRepositoryImpl.getInstance().deleteNote(getArguments().getParcelable(ARG_NOTE));
                 getParentFragmentManager().popBackStack();
                 Toast.makeText(requireContext(), "Note has been deleted", Toast.LENGTH_SHORT).show();
                 dismiss();
