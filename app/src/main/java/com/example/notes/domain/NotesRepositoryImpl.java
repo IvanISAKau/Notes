@@ -1,15 +1,26 @@
 package com.example.notes.domain;
 
+import android.os.Handler;
+import android.os.Looper;
+
+import com.example.notes.ui.list.NotesListFragment;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class NotesRepositoryImpl implements NotesRepository {
 
     private static ArrayList<Note> notes;
 
     private static NotesRepositoryImpl instance;
+
+    private Executor executor = Executors.newSingleThreadExecutor();
+
+    private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
     private NotesRepositoryImpl() {
     }
@@ -33,27 +44,118 @@ public class NotesRepositoryImpl implements NotesRepository {
                     "Дороги в Эквадоре практически идеальные, хотя населенные пункты выглядят очень бедно. На дорогах много интересных машин, например очень много грузовиков - древних Фордов, которые я никогда раньше не видел. А еще несколько раз на глаза попадались старенькие Жигули :) А еще если кого-то обгоняешь и есть встречная машина, она обязательно включает фары. На больших машинах - грузовиках и автобусах, обязательно красуется местный тюнинг: машины разукрашенные, либо в наклейках, и обязательно везде огромное множество светодиодов, как будто новогодние елки едут и переливаются всеми цветами.\n"));
             notes.add(new Note(UUID.randomUUID().toString(), "Работа", "Сразу, как только мы заселились, я не успел разложить вещи, как в мою голову ворвался такой поток информации, что ни в сказке сказать, ни топором не вырубить. Во-первых, на судне абсолютно все бумаги - мануалы, журналы, и так далее - все на английском языке. Даже блокнотик, в который записываются отчеты по грузовым операциям - и тот на английском. Бумаги... ооооо... Их тысячи, лежат в сотнях папок, плюс огромное количество документов на компьютерах. Это мне просто разорвало мозг в клочья, потому что с этим объемом информации надо ознакомиться и научиться работать в кротчайшие сроки. Постоянная беготня, постоянная суета, совсем не легко. А также надо как можно быстрее разобраться со всем оборудованием на мостике, а там его мама не горюй. В общем, пока что, свободного времени нет вообще. Абсолютно. Только ночью с 00:00 до 06:00 можно поспать. Но это продлится не долго, буквально 1-2 недели, потом океанский переход до Европы, можно будет уже спокойно стоять вахты, а в свободное время читать книги компании Seatrade, на случай если в Европе придет проверка и будет задавать вопросы."));
 
-            for (int i = 1; i < 1000; i++) {
+            for (int i = 1; i < 50; i++) {
                 notes.add(new Note(UUID.randomUUID().toString(), "Заметка " + i, "Текст заметки " + i));
             }
         }
         return instance;
     }
 
+//    @Override
+//    public List<Note> getNotes() {
+//        return notes;
+//    }
+
+    // асинхронно:
+
+    //    @Override
+//    public void getNotes(Callback<List<Note>> callback) {
+//                callback.onSuccess(notes);
+//    }
+
     @Override
-    public List<Note> getNotes() {
-        return notes;
+    public void getNotes(Callback<List<Note>> callback) {
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+//                callback.onSuccess(notes);
+
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onSuccess(notes);
+                    }
+                });
+
+            }
+        });
+
     }
 
     @Override
-    public void addNote() {
-        // todo
+    public void addNote(String title, String content, Callback<Note> callback) {
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                Note note = new Note(UUID.randomUUID().toString(), title, content);
+                notes.add(note);
+
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onSuccess(note);
+                    }
+                });
+
+            }
+        });
+
     }
 
     @Override
-    public void deleteNote(Note note) {
-        notes.remove(note);
+    public void deleteNote(Note note, Callback<Void> callback) {
+
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+
+                try {
+                    Thread.sleep(2000L);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+                notes.remove(note);
+
+                mainThreadHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.onSuccess(null);
+                    }
+                });
+
+            }
+        });
+
     }
+
+//    @Override
+//    public Note addNote(String title, String content) {
+//        Note note = new Note(UUID.randomUUID().toString(), title, content);
+//        notes.add(note);
+//        return note;
+//    }
+//
+//    @Override
+//    public void deleteNote(Note note) {
+//        notes.remove(note);
+//    }
 
     @Override
     public void changeTitle() {
@@ -63,6 +165,28 @@ public class NotesRepositoryImpl implements NotesRepository {
     @Override
     public void changeNoteBody() {
         // todo
+    }
+
+    @Override
+    public Note updateNote(String id, String newTitle, String newContent) {
+
+        Note toChange = null;
+        int indexToChange = -1;
+
+        for (int i = 0; i < notes.size(); i++) {
+            if (notes.get(i).getId().equals(id)) {
+                toChange = notes.get(i);
+                indexToChange = i;
+                break;
+            }
+        }
+
+        Note newNote = new Note(toChange.getId(), newTitle, newContent);
+
+        notes.set(indexToChange, newNote);
+
+        return newNote;
+
     }
 
     @Override
