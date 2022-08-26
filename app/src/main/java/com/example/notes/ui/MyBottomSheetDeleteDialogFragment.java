@@ -11,9 +11,7 @@ import androidx.annotation.Nullable;
 
 import com.example.notes.R;
 import com.example.notes.domain.Note;
-import com.example.notes.domain.NotesRepositoryImpl;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.android.material.snackbar.Snackbar;
 
 public class MyBottomSheetDeleteDialogFragment extends BottomSheetDialogFragment {
 

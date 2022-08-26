@@ -17,7 +17,7 @@ public interface NotesRepository {
 
     void changeNoteBody();
 
-    Note updateNote(String id, String newTitle, String newContent);
+    void updateNote(String id, String newTitle, String newContent, Callback<Note> callback);
 
     void changeDate(Note note, Date newDate);
 }

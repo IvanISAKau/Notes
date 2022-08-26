@@ -8,8 +8,6 @@ public interface ListView {
 
     void showNotes(List<Note> notes);
 
-    void addNote(Note note);
-
     void removeNote(Note note, int index);
 
     void showProgress();

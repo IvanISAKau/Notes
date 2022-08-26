@@ -3,8 +3,6 @@ package com.example.notes.domain;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.example.notes.ui.list.NotesListFragment;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -12,22 +10,22 @@ import java.util.UUID;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class NotesRepositoryImpl implements NotesRepository {
+public class InMemoryNotesRepositoryImpl implements NotesRepository {
 
     private static ArrayList<Note> notes;
 
-    private static NotesRepositoryImpl instance;
+    private static InMemoryNotesRepositoryImpl instance;
 
     private Executor executor = Executors.newSingleThreadExecutor();
 
     private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
-    private NotesRepositoryImpl() {
+    private InMemoryNotesRepositoryImpl() {
     }
 
-    public static NotesRepositoryImpl getInstance() {
+    public static InMemoryNotesRepositoryImpl getInstance() {
         if (instance == null) {
-            instance = new NotesRepositoryImpl();
+            instance = new InMemoryNotesRepositoryImpl();
 
             notes = new ArrayList<>();
             notes.add(new Note(UUID.randomUUID().toString(), "Починить тостер", "Купить новый ядерный реактор на барахолке и заменить"));
@@ -168,7 +166,7 @@ public class NotesRepositoryImpl implements NotesRepository {
     }
 
     @Override
-    public Note updateNote(String id, String newTitle, String newContent) {
+    public void updateNote(String id, String newTitle, String newContent, Callback<Note> callback) {
 
         Note toChange = null;
         int indexToChange = -1;
@@ -184,8 +182,7 @@ public class NotesRepositoryImpl implements NotesRepository {
         Note newNote = new Note(toChange.getId(), newTitle, newContent);
 
         notes.set(indexToChange, newNote);
-
-        return newNote;
+        callback.onSuccess(newNote);
 
     }
 

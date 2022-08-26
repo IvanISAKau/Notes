@@ -21,4 +21,6 @@
     <string name="title">Title</string>
     <string name="save">Save</string>
     <string name="content">Content</string>
+    <string name="btn_update">Update</string>
+    <string name="btn_save">Save</string>
 </resources>

@@ -15,8 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.notes.R;
 import com.example.notes.domain.Note;
-import com.example.notes.domain.NotesRepositoryImpl;
-import com.example.notes.ui.MainActivity;
+import com.example.notes.domain.InMemoryNotesRepositoryImpl;
 import com.example.notes.ui.MyBottomSheetDeleteDialogFragment;
 import com.example.notes.ui.NavDrawable;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -155,7 +154,7 @@ public class NotesDetailsFragment extends Fragment {
                             e.printStackTrace();
                         }
 
-                        NotesRepositoryImpl.getInstance().changeDate(note, newDate);
+                        InMemoryNotesRepositoryImpl.getInstance().changeDate(note, newDate);
 
                         updateNote(getCurrentNote());
                     }

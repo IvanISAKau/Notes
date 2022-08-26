@@ -2,19 +2,20 @@ package com.example.notes.ui.list;
 
 import com.example.notes.domain.Callback;
 import com.example.notes.domain.Note;
-import com.example.notes.domain.NotesRepositoryImpl;
+import com.example.notes.domain.NotesRepository;
+import com.example.notes.domain.SharedPreferencesNotesRepository;
 
 import java.util.List;
 
 class NotesListPresenter {
 
-    private NotesRepositoryImpl repository;
+    private NotesRepository repository;
     private ListView view;
 
     private Note selectedNote;
     private int selectedNoteIndex;
 
-    public NotesListPresenter(NotesRepositoryImpl repository, ListView view) {
+    public NotesListPresenter(NotesRepository repository, ListView view) {
         this.repository = repository;
         this.view = view;
     }
@@ -35,20 +36,6 @@ class NotesListPresenter {
         return selectedNoteIndex;
     }
 
-    public void addItem() {
-        view.showProgress();
-
-        repository.addNote("Добавленная заметка", "Добавленный контент...........", new Callback<Note>() {
-            @Override
-            public void onSuccess(Note data) {
-
-                view.hideProgress();
-                view.addNote(data);
-            }
-        });
-        
-    }
-
     public void deleteItem() {
         view.showProgress();
 
@@ -61,7 +48,7 @@ class NotesListPresenter {
                 view.removeNote(selectedNote, selectedNoteIndex);
             }
         });
-        
+
     }
 
     public void requestNotes() {
@@ -75,7 +62,7 @@ class NotesListPresenter {
                 view.showNotes(data);
 
                 view.hideProgress();
-                
+
             }
         });
     }
