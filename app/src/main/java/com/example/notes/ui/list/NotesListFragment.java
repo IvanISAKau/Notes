@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -19,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
 import com.example.notes.R;
+import com.example.notes.domain.FirestoreNotesRepository;
 import com.example.notes.domain.Note;
-import com.example.notes.domain.SharedPreferencesNotesRepository;
 import com.example.notes.ui.AddNotePresenter;
 import com.example.notes.ui.EditNoteBottomSheetDialogFragment;
 import com.example.notes.ui.NavDrawable;
@@ -57,7 +58,7 @@ public class NotesListFragment extends Fragment implements ListView{
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        presenter = new NotesListPresenter(SharedPreferencesNotesRepository.getInstance(requireContext()), this);
+        presenter = new NotesListPresenter(FirestoreNotesRepository.INSTANCE, this);
 
         MaterialToolbar toolbar = view.findViewById(R.id.toolbar);
 

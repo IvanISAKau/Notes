@@ -15,4 +15,5 @@
     <dimen name="margin_notes_details">12dp</dimen>
     <dimen name="margin_add_button">16dp</dimen>
     <dimen name="margin_edit_note_bottom_sheet_dialog">16dp</dimen>
+    <dimen name="auth_text_size">28sp</dimen>
 </resources>

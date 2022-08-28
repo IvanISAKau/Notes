@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
+import javax.annotation.Nullable;
+
 public class Note implements Parcelable {
 
     private final String id;
@@ -12,11 +14,11 @@ public class Note implements Parcelable {
     private String noteBody;
     private Date date;
 
-    public Note(String id, String title, String noteBody) {
+    public Note(String id, String title, String noteBody, @Nullable Date date) {
         this.id = id;
         this.title = title;
         this.noteBody = noteBody;
-        this.date = new Date();
+        this.date = date;
     }
 
     protected Note(Parcel in) {

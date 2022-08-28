@@ -55,7 +55,7 @@ public class SharedPreferencesNotesRepository implements NotesRepository {
     @Override
     public void addNote(String title, String content, Callback<Note> callback) {
 
-        Note addedNote = new Note(UUID.randomUUID().toString(), title, content);
+        Note addedNote = new Note(UUID.randomUUID().toString(), title, content, new Date());
 
         Type notesTypes = new TypeToken<List<Note>>() {
         }.getType();

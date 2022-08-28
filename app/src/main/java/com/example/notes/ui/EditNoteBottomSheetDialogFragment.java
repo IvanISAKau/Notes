@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.notes.R;
+import com.example.notes.domain.FirestoreNotesRepository;
 import com.example.notes.domain.Note;
 import com.example.notes.domain.SharedPreferencesNotesRepository;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -109,11 +110,11 @@ public class EditNoteBottomSheetDialogFragment extends BottomSheetDialogFragment
 
         if (getArguments() !=null && getArguments().containsKey(ARG_NOTE)){
             Note note = requireArguments().getParcelable(ARG_NOTE);
-            presenter = new EditNotePresenter(this, SharedPreferencesNotesRepository.getInstance(requireContext()), note);
+            presenter = new EditNotePresenter(this, FirestoreNotesRepository.INSTANCE, note);
             presenter.refresh();
 
         } else{
-            presenter = new AddNotePresenter(this, SharedPreferencesNotesRepository.getInstance(requireContext()));
+            presenter = new AddNotePresenter(this, FirestoreNotesRepository.INSTANCE);
             presenter.refresh();
         }
 

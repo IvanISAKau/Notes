@@ -18,6 +18,12 @@ import com.example.notes.domain.Note;
 import com.example.notes.ui.about.AboutFragment;
 import com.example.notes.ui.details.NotesDetailsFragment;
 import com.example.notes.ui.list.NotesListFragment;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.navigation.NavigationView;
 
@@ -29,6 +35,10 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        if (savedInstanceState == null) {
+            openNotesList();
+        }
 
         drawerLayout = findViewById(R.id.drawer_layout);
 
@@ -66,30 +76,33 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
                         return true;
 
                     case R.id.action_notes_list:
-                        // todo: доработать. Не совсем верное поведение
-                        Fragment notesListFragment = getSupportFragmentManager().findFragmentByTag(NotesListFragment.LIST_TAG);
 
-                        if (notesListFragment == null) {
-                            notesListFragment = new NotesListFragment();
+                        Fragment listFragment = getSupportFragmentManager().findFragmentByTag(NotesListFragment.LIST_TAG);
+                        if (listFragment == null) {
+                            listFragment = new NotesListFragment();
                         } else {
-                            if (notesListFragment.isVisible()) {
+                            if (listFragment.isVisible()) {
                                 drawerLayout.closeDrawer(GravityCompat.START);
-                                notesListFragment.onDetach();
                                 break;
                             }
                         }
-
                         getSupportFragmentManager()
                                 .beginTransaction()
-                                .replace(R.id.fragment_container, notesListFragment, NotesListFragment.LIST_TAG)
+                                .replace(R.id.fragment_container, listFragment, NotesListFragment.LIST_TAG)
                                 .commit();
-                        drawerLayout.closeDrawer(GravityCompat.START);
+                        drawerLayout.closeDrawer(GravityCompat.START); // закрываем drawer после выбора пункта меню
+
                         return true;
 
                     case R.id.action_settings:
                         //todo later
                         Toast.makeText(MainActivity.this, "Settings", Toast.LENGTH_SHORT).show();
                         drawerLayout.closeDrawer(GravityCompat.START);
+                        return true;
+
+                    case R.id.action_sign_out:
+                        signOut();
+
                         return true;
                 }
                 return false;
@@ -110,6 +123,13 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
             }
         });
 
+        getSupportFragmentManager().setFragmentResultListener(AuthorizationFragment.KEY_AUTHORIZED, this, new FragmentResultListener() {
+            @Override
+            public void onFragmentResult(@NonNull String requestKey, @NonNull Bundle result) {
+                openNotesList();
+            }
+        });
+
     }
 
     @Override
@@ -120,6 +140,39 @@ public class MainActivity extends AppCompatActivity implements NavDrawable {
                 R.string.navigation_drawer_close);
         drawerLayout.addDrawerListener(toggle);
         toggle.syncState();
+    }
+
+    private void openNotesList() {
+
+        // проверяем авторизацию:
+        GoogleSignInAccount account = GoogleSignIn.getLastSignedInAccount(this);
+
+        if (account == null) {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new AuthorizationFragment())
+                    .commit();
+        } else {
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_container, new NotesListFragment())
+                    .commit();
+        }
+    }
+
+    private void signOut() {
+
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .build();
+
+        GoogleSignInClient client = GoogleSignIn.getClient(this, googleSignInOptions);
+        client.signOut()
+                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        openNotesList();
+                    }
+                });
     }
 
 }

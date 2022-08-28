@@ -23,4 +23,6 @@
     <string name="content">Content</string>
     <string name="btn_update">Update</string>
     <string name="btn_save">Save</string>
+    <string name="auth_text">Для продолжения необходимо авторизоваться:</string>
+    <string name="sign_out">Sign out</string>
 </resources>
